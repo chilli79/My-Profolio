@@ -1,105 +1,468 @@
-portfolio/
- ├── 
- ├── style.css
- └── script.js
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Saichithra Saravanan | Embedded Systems Engineer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saichithra S. // Neural Core</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <!-- Custom Fonts (Mono) -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #000;
+            overflow: hidden;
+            color: #22d3ee; /* Cyan-400 */
+        }
+
+        /* Custom Animations */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse-slow {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+        @keyframes typeWriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes pulse-pink {
+            0%, 100% { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 0 10px rgba(236, 72, 153, 0.2); }
+            50% { border-color: rgba(236, 72, 153, 0.8); box-shadow: 0 0 20px rgba(236, 72, 153, 0.5); }
+        }
+
+        .animate-spin-slow { animation: spin-slow 10s linear infinite; }
+        .animate-spin-reverse-slow { animation: spin-reverse-slow 15s linear infinite; }
+        
+        /* Panel Transitions */
+        .panel {
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .panel.active {
+            transform: translate(0, 0) !important;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Scrollbar Hiding */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Selection */
+        ::selection {
+            background: rgba(236, 72, 153, 0.3);
+            color: white;
+        }
+
+        /* Input Glow */
+        .core-input:focus {
+            box-shadow: 0 0 20px #ec4899;
+            border-color: #ec4899;
+        }
+    </style>
 </head>
-<body>
+<body class="relative w-screen h-screen">
 
-<header class="hero">
-  <nav>
-    <h1>SS</h1>
-    <ul>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+    <!-- 1. The Canvas Brain -->
+    <canvas id="neural-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
 
-  <div class="hero-content">
-    <h2>Electronics & Embedded Systems Engineer</h2>
-    <p>Embedded Firmware • FPGA • Robotics • System Testing • Avionics</p>
-    <div class="buttons">
-      <a href="#projects" class="btn primary">View Projects</a>
-      <a href="Resume.pdf" class="btn">Download Resume</a>
-    </div>
-  </div>
-
-  <div class="grid-overlay"></div>
-</header>
-
-<section id="projects">
-  <h3>Selected Projects</h3>
-
-  <div class="cards">
-    <div class="card">
-      <h4>Integrated 5-Axis Robotic System</h4>
-      <span>ESP32 • BLE • Embedded C</span>
-      <p>Real-time coordinated control with validated motor response and custom BLE protocol.</p>
+    <!-- 2. Broadcast Header -->
+    <div class="fixed top-0 left-0 right-0 z-10 p-4 text-center pointer-events-none">
+        <div class="inline-block bg-black/60 backdrop-blur border-x-2 border-pink-500/50 px-6 py-2">
+            <div class="text-[10px] tracking-[0.5em] text-pink-500 mb-1">CORE_BROADCAST</div>
+            <div id="broadcast-text" class="text-sm md:text-lg text-white font-bold tracking-widest uppercase">
+                CORE_SYSTEM_ONLINE // WAITING_FOR_INPUT
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-      <h4>FPGA-Controlled Robotic System</h4>
-      <span>Verilog • FPGA • RTL</span>
-      <p>Designed processing architecture and validated end-to-end system behavior.</p>
+    <!-- 3. Navigation Nodes -->
+    <div id="nav-container">
+        <!-- Identity (Top Left) -->
+        <button onclick="togglePanel('identity')" class="fixed z-20 group flex flex-col items-center justify-center top-24 left-6 md:top-32 md:left-32 hover:scale-110 transition-transform duration-300">
+            <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-cyan-500/50 flex items-center justify-center bg-black/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)] text-cyan-500/50 group-hover:border-cyan-400 group-hover:text-cyan-400 group-hover:shadow-[0_0_25px_#22d3ee] transition-all">
+                <div class="absolute inset-[-4px] border border-dashed border-cyan-500/30 rounded-full animate-spin-slow"></div>
+                <i data-lucide="shield" class="w-8 h-8"></i>
+            </div>
+            <span class="mt-4 font-mono text-xs tracking-[0.2em] font-bold bg-black/80 px-2 py-1 border-x text-cyan-500/70 border-cyan-500/30 group-hover:text-cyan-400">IDENTITY</span>
+        </button>
+
+        <!-- Modules (Top Right) -->
+        <button onclick="togglePanel('modules')" class="fixed z-20 group flex flex-col items-center justify-center top-24 right-6 md:top-32 md:right-32 hover:scale-110 transition-transform duration-300">
+            <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-cyan-500/50 flex items-center justify-center bg-black/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)] text-cyan-500/50 group-hover:border-cyan-400 group-hover:text-cyan-400 group-hover:shadow-[0_0_25px_#22d3ee] transition-all">
+                <div class="absolute inset-[-4px] border border-dashed border-cyan-500/30 rounded-full animate-spin-slow"></div>
+                <i data-lucide="cpu" class="w-8 h-8"></i>
+            </div>
+            <span class="mt-4 font-mono text-xs tracking-[0.2em] font-bold bg-black/80 px-2 py-1 border-x text-cyan-500/70 border-cyan-500/30 group-hover:text-cyan-400">MODULES</span>
+        </button>
+
+        <!-- Archives (Bottom Left) -->
+        <button onclick="togglePanel('archives')" class="fixed z-20 group flex flex-col items-center justify-center bottom-32 left-6 md:bottom-32 md:left-32 hover:scale-110 transition-transform duration-300">
+            <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-cyan-500/50 flex items-center justify-center bg-black/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)] text-cyan-500/50 group-hover:border-cyan-400 group-hover:text-cyan-400 group-hover:shadow-[0_0_25px_#22d3ee] transition-all">
+                <div class="absolute inset-[-4px] border border-dashed border-cyan-500/30 rounded-full animate-spin-slow"></div>
+                <i data-lucide="database" class="w-8 h-8"></i>
+            </div>
+            <span class="mt-4 font-mono text-xs tracking-[0.2em] font-bold bg-black/80 px-2 py-1 border-x text-cyan-500/70 border-cyan-500/30 group-hover:text-cyan-400">ARCHIVES</span>
+        </button>
+
+        <!-- Timeline (Bottom Right) -->
+        <button onclick="togglePanel('timeline')" class="fixed z-20 group flex flex-col items-center justify-center bottom-32 right-6 md:bottom-32 md:right-32 hover:scale-110 transition-transform duration-300">
+            <div class="relative w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-cyan-500/50 flex items-center justify-center bg-black/50 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)] text-cyan-500/50 group-hover:border-cyan-400 group-hover:text-cyan-400 group-hover:shadow-[0_0_25px_#22d3ee] transition-all">
+                <div class="absolute inset-[-4px] border border-dashed border-cyan-500/30 rounded-full animate-spin-slow"></div>
+                <i data-lucide="activity" class="w-8 h-8"></i>
+            </div>
+            <span class="mt-4 font-mono text-xs tracking-[0.2em] font-bold bg-black/80 px-2 py-1 border-x text-cyan-500/70 border-cyan-500/30 group-hover:text-cyan-400">TIMELINE</span>
+        </button>
     </div>
 
-    <div class="card">
-      <h4>Rail Track Crack Detection</h4>
-      <span>Embedded Systems • Sensors</span>
-      <p>Developing magnetic hysteresis-based sensing prototype for predictive maintenance.</p>
+    <!-- 4. Direct Interface Input -->
+    <div id="interface-layer" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-64 md:w-96 text-center transition-opacity duration-300">
+        <div class="text-[10px] text-cyan-500/50 mb-2 tracking-widest">DIRECT_LINK_ESTABLISHED</div>
+        <div class="relative">
+            <input 
+                type="text" 
+                id="core-input"
+                placeholder="ENTER_COMMAND..."
+                class="core-input w-full bg-black/20 backdrop-blur border border-cyan-500/30 text-center text-white p-3 focus:outline-none transition-all rounded-sm uppercase tracking-widest placeholder:text-cyan-900"
+            />
+            <!-- Decorative Corners -->
+            <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-white"></div>
+            <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-white"></div>
+            <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white"></div>
+            <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white"></div>
+        </div>
     </div>
-  </div>
-</section>
 
-<section id="skills">
-  <h3>Technical Skillset</h3>
-
-  <div class="skills-grid">
-    <div>
-      <h4>Embedded & Firmware</h4>
-      <p>Embedded C, C++, ESP32, Arduino, BLE, PWM, Timers</p>
+    <!-- 5. Data Panels (Hidden by default) -->
+    
+    <!-- Identity Panel -->
+    <div id="panel-identity" class="panel fixed z-30 bg-black/90 backdrop-blur-xl border-r border-cyan-500/30 w-full md:w-[500px] left-0 top-0 bottom-0 p-8 overflow-y-auto scrollbar-hide -translate-x-full">
+        <button onclick="closeAllPanels()" class="absolute top-4 right-4 p-2 text-cyan-500 hover:text-white"><i data-lucide="x"></i></button>
+        <div class="mt-8 relative">
+            <h2 class="text-3xl font-black text-white mb-2">SAICHITHRA SARAVANAN</h2>
+            <div class="text-pink-500 text-xs tracking-[0.2em] mb-8">SYSTEMS ARCHITECT // SECTOR 12.97°N</div>
+            
+            <div class="space-y-6">
+                <div class="p-4 border border-cyan-500/20 bg-cyan-500/5">
+                    <h3 class="text-xs font-bold text-cyan-400 mb-2 border-b border-cyan-500/20 pb-1">MISSION_STATEMENT</h3>
+                    <p class="text-sm text-cyan-100 leading-relaxed">Architecting the convergence of hardware, firmware, and intelligent control systems.</p>
+                </div>
+                <div class="p-4 border border-cyan-500/20 bg-cyan-500/5">
+                    <h3 class="text-xs font-bold text-cyan-400 mb-2 border-b border-cyan-500/20 pb-1">ACADEMIC_RECORD</h3>
+                    <div class="text-white font-bold">B.E. Electronics & Telecommunication</div>
+                    <div class="text-xs text-cyan-400 mb-2">BMS Institute of Technology & Management</div>
+                    <p class="text-xs text-slate-400 font-mono">DSP, VLSI, CMOS, Control Systems</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="mailto:saichithrasaravanan@gmail.com" class="flex-1 py-3 border border-pink-500 text-pink-500 text-center hover:bg-pink-500 hover:text-black transition-all font-bold text-xs tracking-widest">EMAIL_UPLINK</a>
+                    <a href="https://www.linkedin.com/in/saichithra-saravanan/" target="_blank" class="flex-1 py-3 border border-cyan-500 text-cyan-500 text-center hover:bg-cyan-500 hover:text-black transition-all font-bold text-xs tracking-widest">NET_PROFILE</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-      <h4>Electronics</h4>
-      <p>Analog & Digital Electronics, Sensors, Motor Drivers</p>
+
+    <!-- Modules Panel -->
+    <div id="panel-modules" class="panel fixed z-30 bg-black/90 backdrop-blur-xl border-l border-cyan-500/30 w-full md:w-[500px] right-0 top-0 bottom-0 p-8 overflow-y-auto scrollbar-hide translate-x-full">
+        <button onclick="closeAllPanels()" class="absolute top-4 left-4 p-2 text-cyan-500 hover:text-white"><i data-lucide="x"></i></button>
+        <div class="mt-8 relative text-right">
+            <h2 class="text-2xl font-bold text-white mb-8 tracking-widest border-b border-cyan-500/50 pb-4">SYSTEM_MODULES</h2>
+            <div class="space-y-6 text-left">
+                <!-- Skill Groups will be injected by JS -->
+                <div id="skills-container"></div>
+            </div>
+        </div>
     </div>
-    <div>
-      <h4>FPGA & VLSI</h4>
-      <p>Verilog, Quartus, Cadence Virtuoso, RTL, Testbenches</p>
+
+    <!-- Archives Panel -->
+    <div id="panel-archives" class="panel fixed z-30 bg-black/90 backdrop-blur-xl border-t border-cyan-500/30 left-0 right-0 bottom-0 h-[80vh] p-8 overflow-y-auto scrollbar-hide translate-y-full">
+        <button onclick="closeAllPanels()" class="absolute top-4 right-4 p-2 text-cyan-500 hover:text-white"><i data-lucide="x"></i></button>
+        <div class="max-w-6xl mx-auto mt-4">
+            <h2 class="text-2xl font-bold text-white mb-8 tracking-widest border-b border-cyan-500/50 pb-4">PROJECT_ARCHIVES</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-container">
+                <!-- Projects injected by JS -->
+            </div>
+        </div>
     </div>
-    <div>
-      <h4>Tools</h4>
-      <p>MATLAB, Simulink, NGSpice, Keil, Arduino IDE</p>
+
+    <!-- Timeline Panel -->
+    <div id="panel-timeline" class="panel fixed z-30 bg-black/90 backdrop-blur-xl border-b border-cyan-500/30 left-0 right-0 top-0 h-[80vh] p-8 overflow-y-auto scrollbar-hide -translate-y-full">
+        <button onclick="closeAllPanels()" class="absolute bottom-4 right-4 p-2 text-cyan-500 hover:text-white"><i data-lucide="x"></i></button>
+        <div class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-bold text-white mb-8 tracking-widest text-center">TEMPORAL_LOGS</h2>
+            <div class="relative border-l border-cyan-500/30 ml-4 md:ml-0 md:pl-0 space-y-12" id="timeline-container">
+                <!-- Experience injected by JS -->
+            </div>
+        </div>
     </div>
-  </div>
-</section>
 
-<section id="contact">
-  <h3>Let’s Build Reliable Systems</h3>
-  <p>Interested in embedded, robotics, aerospace, or avionics roles.</p>
+    <!-- SCRIPT SECTION -->
+    <script>
+        // --- 1. DATA CONSTANTS ---
+        const SKILLS = [
+            { category: "EMBEDDED", items: ["ESP32", "Arduino", "RISC-V", "8051", "ARM Cortex"] },
+            { category: "ROBOTICS", items: ["PID Control", "Inv. Kinematics", "Sensor Fusion", "PWM", "Actuators"] },
+            { category: "HARDWARE", items: ["Verilog/FPGA", "Cadence Virtuoso", "PCB Design", "Circuit Analysis"] },
+            { category: "SOFTWARE", items: ["C/C++", "Python", "MATLAB", "Simulink", "RTOS"] }
+        ];
 
-  <div class="contact-links">
-    <a href="mailto:saichithrasaravanan@gmail.com">Email</a>
-    <a href="https://linkedin.com/in/saichithra-saravanan" target="_blank">LinkedIn</a>
-    <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-  </div>
-</section>
+        const PROJECTS = [
+            { title: "MARK I: ROBOTIC ARM", type: "MECHATRONICS", tech: "ESP32 // BLE // SERVOS", desc: "Inverse kinematics engine for 4-DOF manipulation. Custom BLE protocol implementation.", status: "COMPLETE", id: "MK-01" },
+            { title: "RAIL CRACK DETECTOR", type: "NON-DESTRUCTIVE TESTING", tech: "MAG-HYSTERESIS // ARDUINO", desc: "Autonomous vehicle utilizing electromagnetic hysteresis sensing to identify micro-fractures in rail infrastructure.", status: "OPERATIONAL", id: "MK-02" },
+            { title: "ECOMENDER ROVER", type: "AUTONOMOUS SYSTEM", tech: "FPGA // VERILOG // RISC-V", desc: "FPGA-accelerated mobile robot for environmental maintenance with hardware-level obstacle avoidance.", status: "PROTOTYPE", id: "MK-03" },
+            { title: "ADAS LANE GUIDANCE", type: "COMPUTER VISION", tech: "MATLAB // SIMULINK", desc: "Level-2 autonomy simulation featuring lane departure warning and adaptive cruise control algorithms.", status: "SIMULATION", id: "MK-04" },
+            { title: "LINE FOLLOWER BOT", type: "CONTROL THEORY", tech: "PID LOOP // IR ARRAY", desc: "High-precision navigation vehicle utilizing tuned PID error correction for complex track geometries.", status: "OPTIMIZED", id: "MK-05" },
+            { title: "VLSI DIGITAL LOGIC", type: "CHIP DESIGN", tech: "CADENCE // CMOS", desc: "Transistor-level design of ALU and Counter blocks with power dissipation analysis.", status: "VERIFIED", id: "MK-06" }
+        ];
 
-<footer>
-  <p>© 2025 Saichithra Saravanan</p>
-</footer>
+        const EXPERIENCE = [
+            { role: "ENGINEERING INTERN", company: "GALORE NETWORKS", date: "2025.09 - CURRENT", desc: "Protocol validation and hardware throughput optimization for next-gen network infrastructure." },
+            { role: "ML INTERN", company: "SKILLCRAFT TECH", date: "2024.10 [3 MOS]", desc: "Telemetry data analysis and development of predictive maintenance models." },
+            { role: "SECRETARY", company: "IEEE ANTENNAS", date: "2024 - CURRENT", desc: "Strategic leadership for technical summits and industry-academia bridging events." }
+        ];
 
-<script src="script.js"></script>
+        // --- 2. RENDER FUNCTIONS ---
+        function renderSkills() {
+            const container = document.getElementById('skills-container');
+            container.innerHTML = SKILLS.map(skill => `
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-pink-500 rounded opacity-20 group-hover:opacity-100 transition duration-500 blur"></div>
+                    <div class="relative p-4 bg-black border border-cyan-500/30">
+                        <h3 class="text-pink-500 font-bold text-sm tracking-widest mb-3 flex items-center gap-2">
+                            <i data-lucide="hexagon" class="w-3 h-3"></i> ${skill.category}
+                        </h3>
+                        <div class="flex flex-wrap gap-2">
+                            ${skill.items.map(item => `<span class="text-[10px] px-2 py-1 bg-cyan-900/30 border border-cyan-500/30 text-cyan-300">${item}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = PROJECTS.map(proj => `
+                <div class="group border border-cyan-500/20 bg-cyan-900/5 hover:bg-cyan-900/20 hover:border-pink-500/50 transition-all duration-300 p-6 flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-2 opacity-50 text-[10px] font-mono border-l border-b border-cyan-500/20 group-hover:border-pink-500/50 group-hover:text-pink-500">${proj.id}</div>
+                    <div class="text-[10px] text-cyan-500 mb-2">${proj.type}</div>
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-pink-300">${proj.title}</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4 flex-1">${proj.desc}</p>
+                    <div class="text-[10px] font-mono text-cyan-600 border-t border-cyan-500/10 pt-2">STACK: ${proj.tech}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = EXPERIENCE.map(exp => `
+                <div class="relative md:grid md:grid-cols-12 md:gap-8 group">
+                    <div class="absolute -left-[5px] md:left-auto md:right-1/2 md:-mr-[5px] top-0 w-2.5 h-2.5 bg-black border-2 border-cyan-500 rounded-full group-hover:border-pink-500 group-hover:scale-125 transition-all z-10"></div>
+                    <div class="md:col-span-6 md:text-right pl-6 md:pl-0 md:pr-12">
+                        <div class="text-xs font-mono text-pink-500 mb-1">${exp.date}</div>
+                        <div class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">${exp.company}</div>
+                    </div>
+                    <div class="md:col-span-6 pl-6 md:pl-12 pt-2 md:pt-0">
+                        <div class="text-sm font-bold text-cyan-400 mb-2">${exp.role}</div>
+                        <p class="text-sm text-slate-400 leading-relaxed">${exp.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 3. UI LOGIC ---
+        let currentPanel = null;
+
+        function togglePanel(id) {
+            const panel = document.getElementById(`panel-${id}`);
+            const inputLayer = document.getElementById('interface-layer');
+            
+            if (currentPanel === id) {
+                // Close current
+                panel.classList.remove('active');
+                currentPanel = null;
+                inputLayer.style.opacity = '1';
+                inputLayer.style.pointerEvents = 'auto';
+            } else {
+                // Close previous if exists
+                if (currentPanel) {
+                    document.getElementById(`panel-${currentPanel}`).classList.remove('active');
+                }
+                // Open new
+                panel.classList.add('active');
+                currentPanel = id;
+                inputLayer.style.opacity = '0';
+                inputLayer.style.pointerEvents = 'none';
+            }
+        }
+
+        function closeAllPanels() {
+            if (currentPanel) {
+                document.getElementById(`panel-${currentPanel}`).classList.remove('active');
+                currentPanel = null;
+                const inputLayer = document.getElementById('interface-layer');
+                inputLayer.style.opacity = '1';
+                inputLayer.style.pointerEvents = 'auto';
+            }
+        }
+
+        // --- 4. NEURAL BRAIN CANVAS ---
+        const state = { mode: 'IDLE' }; // IDLE, PROCESSING, ACTIVE
+
+        function initCanvas() {
+            const canvas = document.getElementById('neural-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            const particleCount = 400;
+            const particles = [];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                const radius = 200 + Math.random() * 50;
+                particles.push({
+                    x: radius * Math.sin(phi) * Math.cos(theta),
+                    y: radius * Math.sin(phi) * Math.sin(theta),
+                    z: radius * Math.cos(phi),
+                    baseX: radius * Math.sin(phi) * Math.cos(theta),
+                    baseY: radius * Math.sin(phi) * Math.sin(theta),
+                    baseZ: radius * Math.cos(phi),
+                });
+            }
+
+            let mouse = { x: 0, y: 0 };
+            window.addEventListener('mousemove', e => {
+                mouse.x = (e.clientX - width / 2) * 0.001;
+                mouse.y = (e.clientY - height / 2) * 0.001;
+            });
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const colors = {
+                IDLE: { r: 34, g: 211, b: 238 },
+                PROCESSING: { r: 251, g: 191, b: 36 },
+                ACTIVE: { r: 236, g: 72, b: 153 }
+            };
+
+            let time = 0;
+            function animate() {
+                time += 0.05;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                ctx.fillRect(0, 0, width, height);
+
+                const color = colors[state.mode];
+                const pulse = state.mode === 'ACTIVE' ? Math.sin(time * 0.5) * 0.2 + 1 : 1;
+                const jitter = state.mode === 'PROCESSING' ? 2 : 0;
+
+                particles.sort((a, b) => b.screenZ - a.screenZ);
+
+                particles.forEach(p => {
+                    // Rotation
+                    const rotX = 0.002 + mouse.y;
+                    const rotY = 0.002 + mouse.x;
+
+                    // Rotate Y
+                    let x = p.x * Math.cos(rotY) - p.z * Math.sin(rotY);
+                    let z = p.x * Math.sin(rotY) + p.z * Math.cos(rotY);
+                    
+                    // Rotate X
+                    let y = p.y * Math.cos(rotX) - z * Math.sin(rotX);
+                    z = p.y * Math.sin(rotX) + z * Math.cos(rotX);
+
+                    // Jitter & Base reset
+                    p.x = p.baseX + (Math.random() - 0.5) * jitter;
+                    p.y = p.baseY + (Math.random() - 0.5) * jitter;
+                    p.z = p.baseZ + (Math.random() - 0.5) * jitter;
+
+                    const scale = 400 / (400 + z);
+                    const sx = width / 2 + x * scale * pulse;
+                    const sy = height / 2 + y * scale * pulse;
+                    
+                    p.screenZ = z;
+
+                    const alpha = (z + 200) / 400;
+                    if (alpha > 0) {
+                        ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(sx, sy, scale * 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // --- 5. GEMINI API ---
+        const apiKey = ""; // <--- INSERT YOUR API KEY HERE
+
+        async function callGemini(prompt) {
+            if(!apiKey) return "CORE_ERROR: API_KEY_MISSING";
+            
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const systemInstruction = `You are THE CORE, a sentient data construct for Saichithra Saravanan's profile. Speak in uppercase, abstract tech syntax. Concise.`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    })
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "CONNECTION_LOST";
+            } catch (e) {
+                return "NEURAL_LINK_FAILURE";
+            }
+        }
+
+        // Input Handling
+        const inputField = document.getElementById('core-input');
+        const broadcastDisplay = document.getElementById('broadcast-text');
+
+        inputField.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter' && inputField.value.trim()) {
+                const cmd = inputField.value;
+                inputField.value = "";
+                
+                state.mode = 'PROCESSING';
+                broadcastDisplay.innerText = "PROCESSING_QUERY...";
+                
+                const response = await callGemini(cmd);
+                
+                broadcastDisplay.innerText = response;
+                state.mode = 'ACTIVE';
+                
+                setTimeout(() => { state.mode = 'IDLE'; }, 5000);
+            }
+        });
+
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            lucide.createIcons();
+            initCanvas();
+            renderSkills();
+            renderProjects();
+            renderTimeline();
+        };
+
+    </script>
 </body>
 </html>
