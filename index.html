@@ -627,7 +627,7 @@
         }
 
         // --- 5. VOICE & AI LOGIC ---
-        const apiKey = "AIzaSyALLdKDgwXfnjeGaoWrr3Gp7BJVQpsU1pg"; // <--- PASTE GEMINI KEY HERE
+        const apiKey = "AIzaSyDsNlA_K_RY460Qh6_etrDRqH9-5Bm0jBE" // <--- PASTE GEMINI KEY HERE
 
         function speak(text) {
             if ('speechSynthesis' in window) {
@@ -673,7 +673,7 @@
             if(cmd.toLowerCase().includes("open identity")) { togglePanel('identity'); return; }
             if(cmd.toLowerCase().includes("close")) { closeAllPanels(); return; }
 
-            if(!apiKey || apiKey === "AIzaSyALLdKDgwXfnjeGaoWrr3Gp7BJVQpsU1pg") {
+            if(!apiKey || apiKey === "AIzaSyDsNlA_K_RY460Qh6_etrDRqH9-5Bm0jBE") {
                 speak("API Key Missing. Cannot contact Cybertron.");
                 return;
             }
