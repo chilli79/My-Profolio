@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saichithra S. // CYBERTRON LINK</title>
+    <title>Saichithra S. // PRIME LINK</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +41,7 @@
             50% { transform: rotate(180deg) scale(0.95); }
             100% { transform: rotate(0deg) scale(1); }
         }
-        @keyframes pulse-red {
+        @keyframes pulse-hazard {
             0%, 100% { border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
             50% { border-color: rgba(239, 68, 68, 0.8); box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); }
         }
@@ -51,13 +51,13 @@
         }
         @keyframes audio-wave {
             0%, 100% { height: 5px; }
-            50% { height: 25px; background-color: #ef4444; } /* Prime Red */
+            50% { height: 25px; background-color: #3b82f6; } /* Optimus Blue */
         }
 
         .animate-drift { animation: drift-spin 15s linear infinite; }
         .animate-drift-reverse { animation: drift-spin-reverse 20s linear infinite; }
         .animate-scan { animation: scanline 3s linear infinite; }
-        .animate-pulse-red { animation: pulse-red 2s infinite; }
+        .animate-hazard { animation: pulse-hazard 2s infinite; }
         
         /* --- PANEL TRANSITIONS --- */
         .panel {
@@ -627,7 +627,7 @@
         }
 
         // --- 5. VOICE & AI LOGIC ---
-        const apiKey = "AIzaSyDsNlA_K_RY460Qh6_etrDRqH9-5Bm0jBE" // <--- PASTE GEMINI KEY HERE
+        const apiKey = "AIzaSyDsNlA_K_RY460Qh6_etrDRqH9-5Bm0jBE"; // <--- Updated Key
 
         function speak(text) {
             if ('speechSynthesis' in window) {
@@ -673,7 +673,7 @@
             if(cmd.toLowerCase().includes("open identity")) { togglePanel('identity'); return; }
             if(cmd.toLowerCase().includes("close")) { closeAllPanels(); return; }
 
-            if(!apiKey || apiKey === "AIzaSyDsNlA_K_RY460Qh6_etrDRqH9-5Bm0jBE") {
+            if(!apiKey || apiKey === "PASTE_YOUR_KEY_HERE") {
                 speak("API Key Missing. Cannot contact Cybertron.");
                 return;
             }
@@ -710,7 +710,7 @@
             // Audio unlock overlay
             document.getElementById('start-overlay').addEventListener('click', () => {
                 document.getElementById('start-overlay').classList.add('hidden-overlay');
-                speak("All systems online, Welcome to the interface recruiter.");
+                speak("Optimus Prime online. Freedom is the right of all sentient beings. Welcome to the interface.");
             });
         };
     </script>
